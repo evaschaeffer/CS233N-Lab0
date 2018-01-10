@@ -16,7 +16,7 @@ namespace TicTacToe
         {
             InitializeComponent();
         }
-
+        // constant files
         const string USER_SYMBOL = "X";
         const string COMPUTER_SYMBOL = "O";
         const string EMPTY = "";
