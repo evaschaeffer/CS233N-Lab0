@@ -45,15 +45,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TTTForm.cs">
+    <Compile Include="Properties\TTTForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TTTForm.Designer.cs">
+    <Compile Include="Properties\TTTForm.Designer.cs">
       <DependentUpon>TTTForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="TTTForm.resx">
+    <EmbeddedResource Include="Properties\TTTForm.resx">
       <DependentUpon>TTTForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
