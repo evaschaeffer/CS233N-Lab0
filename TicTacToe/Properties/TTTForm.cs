@@ -33,6 +33,20 @@ namespace TicTacToe
         const int COLUMN = 2;
         const int DIAGONAL = 3;
 
+        string[,] board = new string[SIZE, SIZE];
+
+        // create a method to fill the board with empty values
+        public void FillBoard()
+        {
+            for (int row = 0; row < SIZE; row++)
+            {
+                for (int col = 0; col < SIZE; col++)
+                {
+                    board[row, col] = EMPTY;
+                }
+            }
+        }
+
         // This method takes a row and column as parameters and 
         // returns a reference to a label on the form in that position
         private Label GetSquare(int row, int column)
@@ -54,14 +68,13 @@ namespace TicTacToe
         // This method takes a row (in the range of 0 - 4) and returns true if 
         // the row on the form contains 5 Xs or 5 Os.
         // Use it as a model for writing IsColumnWinner
+        // CHNAGE 
         private bool IsRowWinner(int row)
         {
-            Label square = GetSquare(row, 0);
-            string symbol = square.Text;
+            string symbol = board[row, 0];
             for (int col = 1; col < SIZE; col++)
             {
-                square = GetSquare(row, col);
-                if (symbol == EMPTY || square.Text != symbol)
+                if (symbol == EMPTY || board[row, col] != symbol)
                     return false;
             }
             return true;
@@ -69,6 +82,7 @@ namespace TicTacToe
 
         //* TODO:  finish all of these that return true
         // Checks to see if any row is the winner by interating through each row.
+        // CHNAGE
         private bool IsAnyRowWinner()
         {
             for (int row = 1; row < SIZE; row++)
@@ -80,20 +94,20 @@ namespace TicTacToe
         }
 
         // Checks to see if a column is the winner by interating through each row.
+        // CHANGE
         private bool IsColumnWinner(int col)
         {
-            Label square = GetSquare(0, col);
-            string symbol = square.Text;
+            string symbol = board[0, col];
             for (int row = 1; row < SIZE; row++)
             {
-                square = GetSquare(row, col);
-                if (symbol == EMPTY || square.Text != symbol)
+                if (symbol == EMPTY || board[row, col] != symbol)
                     return false;
             }
             return true;
         }
 
         // Checks to see if any column is the winner by interating through each column.
+        //CHANGE
         private bool IsAnyColumnWinner()
         {
             for (int col = 1; col < SIZE; col++)
@@ -105,7 +119,7 @@ namespace TicTacToe
             }
             return false;            
         }
-
+        //CHANGE
         private bool IsDiagonal1Winner()
         {
             Label square = GetSquare(0, 0);
@@ -119,6 +133,7 @@ namespace TicTacToe
             return true;
         }
 
+        //CHANGE
         private bool IsDiagonal2Winner()
         {
             Label square = GetSquare(0, (SIZE - 1));
@@ -131,7 +146,8 @@ namespace TicTacToe
             }
             return true;
         }
-
+        
+        //CHANGE
         private bool IsAnyDiagonalWinner()
         {
             Label square = GetSquare(0, (SIZE - 1));
@@ -144,7 +160,7 @@ namespace TicTacToe
             }
             return true;
         }
-
+        //CHANGE
         private bool IsFull()
         {
             Label square = GetSquare(0, 0);
@@ -298,12 +314,10 @@ namespace TicTacToe
                 l.Enabled = true;
             }
         }
-
+        //CHANGE
         private void MakeComputerMove()
         {
             Random randomNumberGenerator = new Random();
-
-
             Label square;
             do
             {
@@ -359,8 +373,10 @@ namespace TicTacToe
             int winningDimension = NONE;
             int winningValue = NONE;
 
+            //CHANGE
             Label clickedLabel = (Label)sender;
             clickedLabel.Text = USER_SYMBOL;
+
             DisableSquare(clickedLabel);
 
             if (IsWinner(out winningDimension, out winningValue) == false)
