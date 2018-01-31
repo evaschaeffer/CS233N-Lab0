@@ -23,6 +23,7 @@ namespace TicTacToe
 
         const int SIZE = 5;
 
+
         // constants for the 2 diagonals
         const int TOP_LEFT_TO_BOTTOM_RIGHT = 1;
         const int TOP_RIGHT_TO_BOTTOM_LEFT = 2;
@@ -82,7 +83,7 @@ namespace TicTacToe
 
         //* TODO:  finish all of these that return true
         // Checks to see if any row is the winner by interating through each row.
-        // CHNAGE
+        // CHANGE
         private bool IsAnyRowWinner()
         {
             for (int row = 1; row < SIZE; row++)
@@ -122,12 +123,10 @@ namespace TicTacToe
         //CHANGE
         private bool IsDiagonal1Winner()
         {
-            Label square = GetSquare(0, 0);
-            string symbol = square.Text;
+            string symbol = board[0, 0];
             for (int diag = 1; diag < SIZE; diag ++)
             {
-                square = GetSquare(diag, diag);
-                if (symbol == EMPTY || square.Text != symbol)
+                if (symbol == EMPTY || board[diag,diag] != symbol)
                     return false;
             }
             return true;
@@ -136,12 +135,10 @@ namespace TicTacToe
         //CHANGE
         private bool IsDiagonal2Winner()
         {
-            Label square = GetSquare(0, (SIZE - 1));
-            string symbol = square.Text;
+            string symbol = board[0, (SIZE-1)];
             for (int row = 1, col = SIZE - 2; row < SIZE; row++, col--)
             {
-                square = GetSquare(row, col);
-                if (symbol == EMPTY || square.Text != symbol)
+                if (symbol == EMPTY || board[row, col] != symbol)
                     return false;
             }
             return true;
@@ -150,12 +147,12 @@ namespace TicTacToe
         //CHANGE
         private bool IsAnyDiagonalWinner()
         {
-            Label square = GetSquare(0, (SIZE - 1));
-            string symbol = square.Text;
+            //Label square = GetSquare(0, (SIZE - 1));
+            string symbol = board[0, (SIZE - 1)];
             for (int row = 1, col = SIZE-2; row < SIZE; row++, col--)
             {
-                square = GetSquare(row, col);
-                if (symbol == EMPTY || square.Text != symbol)
+                //square = GetSquare(row, col);
+                if (symbol == EMPTY || board[row, col] != symbol)
                     return false;
             }
             return true;
@@ -163,14 +160,12 @@ namespace TicTacToe
         //CHANGE
         private bool IsFull()
         {
-            Label square = GetSquare(0, 0);
-            string symbol = square.Text;
+            string symbol = board[0, 0];
             for (int row = 0; row < SIZE; row++)
             {
                 for (int col = 0; col < SIZE; col++)
                 {
-                    square = GetSquare(row, col);
-                    if (square.Text == EMPTY)
+                    if (board[row, col] == EMPTY)
                     return false;
                 }
             }
@@ -312,23 +307,23 @@ namespace TicTacToe
                 Label l = GetSquare(row, col);
                 l.Text = EMPTY;
                 l.Enabled = true;
+                l.ForeColor = Color.Black;
             }
         }
         //CHANGE
         private void MakeComputerMove()
         {
             Random randomNumberGenerator = new Random();
-            Label square;
+            int row, col;
             do
             {
-                int row = randomNumberGenerator.Next(0, SIZE);
-                int col = randomNumberGenerator.Next(0, SIZE);
-                square = GetSquare(row, col);
+                row = randomNumberGenerator.Next(0, SIZE);
+                col = randomNumberGenerator.Next(0, SIZE);
 
-            } while (square.Text != EMPTY);
+            } while (board[row, col] != EMPTY);
 
-            square.Text = COMPUTER_SYMBOL;
-            DisableSquare(square);
+            board[row, col] = COMPUTER_SYMBOL;
+            //DisableSquare(square);
 
         }
 
@@ -366,24 +361,45 @@ namespace TicTacToe
                 }
             }
         }
+        // sync the board and the UI
+        public void SyncArrayAndUI()
+        {
+            for(int row = 0; row < board.GetLength(0); row++)
+            {
+                for(int col = 0; col < board.GetLength(1); col++)
+                {
+                    GetSquare(row, col).Text = board[row, col];
+                    GetSquare(row, col).ForeColor = Color.Black;
+                    if (GetSquare(row, col).Text != EMPTY)
+                        DisableSquare(GetSquare(row, col));
+                }
+            }
+        }
+
 
         //* TODO:  finish the event handlers
         private void label_Click(object sender, EventArgs e)
         {
             int winningDimension = NONE;
             int winningValue = NONE;
+            int row, col;
 
             //CHANGE
             Label clickedLabel = (Label)sender;
-            clickedLabel.Text = USER_SYMBOL;
+            //clickedLabel.Text = USER_SYMBOL;
 
-            DisableSquare(clickedLabel);
+            // put the x in the array
+            GetRowAndColumn(clickedLabel, out row, out col);
+            board[row, col] = USER_SYMBOL;
+            SyncArrayAndUI();
+            //DisableSquare(clickedLabel);
 
             if (IsWinner(out winningDimension, out winningValue) == false)
             {
                 if (!IsFull())
                 {
                     MakeComputerMove();
+                    SyncArrayAndUI();
                     if (IsWinner(out winningDimension, out winningValue))
                     {
                         HighlightWinner("Computer", winningDimension, winningValue);
@@ -405,13 +421,25 @@ namespace TicTacToe
 
         private void newGameButton_Click(object sender, EventArgs e)
         {
-            Application.Restart();
+            //Application.Restart();
+            //ResetSquares();
+            
+            EnableAllSquares();
+            FillBoard();
+            SyncArrayAndUI();
+            resultLabel.Text = "";
 
         }
 
         private void exitButton_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void TTTForm_Load(object sender, EventArgs e)
+        {
+            FillBoard();
+            SyncArrayAndUI();
         }
     }
 }
